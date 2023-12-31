@@ -6,6 +6,7 @@ const chatbotCloseBtn = document.querySelector(".close-btn");
 
 let userMessage;
 let API_KEY = "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";
+const inputInitHeight = chatInput.scrollHeight;
 
 const createChatLi = (message, className) => {
   const chatLi = document.createElement("li");
@@ -64,6 +65,11 @@ const handleChat = () => {
     generateResponse(incomingChatLi);
   }, 600);
 };
+
+chatInput.addEventListener("input", () => {
+  chatInput.style.height = `${inputInitHeight}px`;
+  chatInput.style.height = `${chatInput.scrollHeight}px`;
+});
 
 chatbotToggler.addEventListener("click", () =>
   document.body.classList.toggle("show-chatbot")
