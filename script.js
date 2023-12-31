@@ -3,6 +3,7 @@ const sendChatBtn = document.querySelector(".chat-input span");
 const chatbox = document.querySelector(".chatbox");
 
 let userMessage;
+let API_KEY = "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";
 
 const createChatLi = (message, className) => {
   const chatLi = document.createElement("li");
@@ -16,6 +17,33 @@ const createChatLi = (message, className) => {
   return chatLi;
 };
 
+const generateResponse = (incomingChatLi) => {
+  const API_URL = "https://api.openai.com/v1/chat/completions";
+  const messageElement = incomingChatLi.querySelector("p");
+
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${API_KEY}`,
+    },
+    body: JSON.stringify({
+      model: "gpt-3.5-turbo",
+      messages: [{ role: "user", content: userMessage }],
+    }),
+  };
+
+  fetch(API_URL, requestOptions)
+    .then((res) => res.json())
+    .then((data) => {
+      messageElement.textContent = data.choices[0].message.content;
+    })
+    .catch((err) => {
+      messageElement.textContent =
+        "I am sleeping right now, please come back later.";
+    });
+};
+
 const handleChat = () => {
   userMessage = chatInput.value.trim();
   if (!userMessage) return;
@@ -23,7 +51,9 @@ const handleChat = () => {
   chatbox.appendChild(createChatLi(userMessage, "outgoing"));
 
   setTimeout(() => {
-    chatbox.appendChild(createChatLi("Thinkinng...", "incoming"));
+    const incomingChatLi = createChatLi("Thinkinng...", "incoming");
+    chatbox.appendChild(incomingChatLi);
+    generateResponse(incomingChatLi);
   }, 600);
 };
 
