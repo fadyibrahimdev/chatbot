@@ -42,6 +42,7 @@ const generateResponse = (incomingChatLi) => {
       messageElement.textContent = data.choices[0].message.content;
     })
     .catch((err) => {
+      messageElement.classList.add("error");
       messageElement.textContent =
         "I am sleeping right now, please come back later.";
     })
