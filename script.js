@@ -10,10 +10,11 @@ const createChatLi = (message, className) => {
   chatLi.classList.add("chat", className);
   let chatContent =
     className === "outgoing"
-      ? `<p>${message}</p>`
-      : `<span class="material-symbols-outlined">smart_toy</span><p>${message}</p>
+      ? `<p></p>`
+      : `<span class="material-symbols-outlined">smart_toy</span><p></p>
   `;
   chatLi.innerHTML = chatContent;
+  chatLi.querySelector("p").textContent = message;
   return chatLi;
 };
 
@@ -41,18 +42,22 @@ const generateResponse = (incomingChatLi) => {
     .catch((err) => {
       messageElement.textContent =
         "I am sleeping right now, please come back later.";
-    });
+    })
+    .finally(() => chatbox.scrollTo(0, chatbox.scrollHeight));
 };
 
 const handleChat = () => {
   userMessage = chatInput.value.trim();
   if (!userMessage) return;
+  chatInput.value = "";
 
   chatbox.appendChild(createChatLi(userMessage, "outgoing"));
+  chatbox.scrollTo(0, chatbox.scrollHeight);
 
   setTimeout(() => {
     const incomingChatLi = createChatLi("Thinkinng...", "incoming");
     chatbox.appendChild(incomingChatLi);
+    chatbox.scrollTo(0, chatbox.scrollHeight);
     generateResponse(incomingChatLi);
   }, 600);
 };
